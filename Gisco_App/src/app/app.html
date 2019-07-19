@@ -33,10 +33,10 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-content>
+  <ion-content *ngIf="viewMenu">
     <ion-list>
       <button ion-item *ngFor="let p of pages" (click)="openPage(p)">
-        {{p.title}}
+        {{p.title}} {{getNumeroNotifiche(p.title)}}
       </button>
       <button ion-item (click)="logOut()">
         logout

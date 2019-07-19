@@ -20,26 +20,26 @@ import { AttivitaService } from '../../../services/attivita/attivita.service';
 })
 
 export class DashboardAttivitaPage {
-  private selectedAttivita: Attivita.Attivita;
+  public selectedAttivita: Attivita.Attivita;
   color: string;
   icon: string;
   private callbackChiusa: any;
   private ws_Att_Ch: Attivita.ws_Attivita_Chiusura;
   private ws_Att_Com: Osservazione.ws_Commento;
-  private listaCommenti: Array<Osservazione.Commento>;
-  private dataInizio: string;
-  private note: string;
-  private dataFine: string;
-  private conclusa: boolean;
+  public listaCommenti: Array<Osservazione.Commento>;
+  public dataInizio: string;
+  public note: string;
+  public dataFine: string;
+  public conclusa: boolean;
   private whichPage: string;
-  private commentoTesto: string;
-  private rispostaTesto: string;
+  public commentoTesto: string;
+  public rispostaTesto: string;
   private myUserKey: number;
   selectedIndexCommento: any;
   selectedCommento: any;
-  private listaPersonalizzate: Array<Osservazione.ProprietaPersonalizzataChiusura>;
+  public listaPersonalizzate: Array<Osservazione.ProprietaPersonalizzataChiusura>;
   private valoreSKey: number;
-  private listaImmagini: Array<Attivita.Immagine>;
+  public listaImmagini: Array<Attivita.Immagine>;
   private ws_Oss_Com: Osservazione.ws_Commento;
 
   constructor(public navCtrl: NavController,
@@ -87,7 +87,7 @@ export class DashboardAttivitaPage {
               this.listaPersonalizzate = r.c_proprieta_personalizzate;
               this.attivitaService.getListaImmaginiAttivita(this.selectedAttivita.attivita_key, tokenValue).subscribe(r => {
                 if (r.ErrorMessage.msg_code === 0) {
-                  this.listaImmagini = r.l_lista_immagini;
+                  this.listaImmagini = r.l_lista_immagini_attivita;
                 }
                 loading.dismiss();
               })
@@ -477,12 +477,12 @@ export class DashboardAttivitaPage {
 
   }
 
-  goToEliminaImmagine(imm: Osservazione.Immagine) {
+  goToEliminaImmagine(imm: Attivita.Immagine) {
     let loading = this.loadingCtrl.create({
       content: 'Caricamento...'
     });
     loading.present();
-    var ws_imm = new Osservazione.ws_Immagine();
+    var ws_imm = new Attivita.ws_Immagine();
     this.storeService.getUserDataPromise().then((val: Login.ws_Token) => {
       ws_imm.token = val.token_value;
       ws_imm.immagine = imm;

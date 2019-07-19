@@ -21,6 +21,11 @@ import { ElencoOsservazioniPage } from './pages/osservazioni/elenco-osservazioni
 import { ElencoAttivitaPage } from './pages/attivita/elenco-attivita/elenco-attivita';
 import { Firebase } from '@ionic-native/firebase';
 
+import { CommonService } from './services/shared/common.service';
+import { StoreService} from './services/store/store.service';
+
+import { Login } from './models/login/login.namespace';
+
 
 @Component({
   templateUrl: 'app.html'
@@ -32,13 +37,24 @@ export class MyApp {
   pages: Array<{ title: string, component: any }>;
   private pagineSenzaMenu: Array<string> = new Array("LoadingPage", "LoginPage");
 
+  private numNotifiche_attivita = 0;
+  private numNotifiche_osservazioni = 0;
+  private numNotifiche_prescrizioni= 0;
+  private numNotifiche_messaggi = 0;
+  private numNotifiche_commenti_at = 0;
+  private numNotifiche_commenti_os = 0;
+
+  public viewMenu: boolean = false;
+
   constructor(
     public platform: Platform,
     public menu: MenuController,
     public statusBar: StatusBar,
     private storage: Storage,
     public splashScreen: SplashScreen,
-    private firebase: Firebase
+    private firebase: Firebase,
+    public commonService: CommonService,
+    public storeService: StoreService
   ) {
     this.initializeApp();
 
@@ -84,6 +100,50 @@ export class MyApp {
      this.firebase.onTokenRefresh()
        .subscribe((token: string) => console.log(`Got a new token ${token}`));*/
     });
+
+    //carico le notifiche per le pagine nel menu
+    this.storeService.getUserDataPromise().then((val: Login.ws_Token) => {
+      var tokenValue = val.token_value;
+      this.commonService.getNotifiche(tokenValue).subscribe(r => {
+        var notifiche = r.l_notifiche;
+        for (let notifica of notifiche) {
+          switch(notifica.notifica_type){
+            case "attivita": {
+              if(notifica.notifica_count){
+                this.numNotifiche_attivita = notifica.notifica_count;
+              }
+            }
+            case "osservazioni": {
+              if(notifica.notifica_count){
+                this.numNotifiche_osservazioni = notifica.notifica_count;
+              }
+            }
+            case "prescrizioni": {
+              if(notifica.notifica_count){
+                this.numNotifiche_prescrizioni = notifica.notifica_count;
+              }
+            }
+            case "messaggi": {
+              if(notifica.notifica_count){
+                this.numNotifiche_messaggi = notifica.notifica_count;
+              }
+            }
+            case "commenti_at": {
+              if(notifica.notifica_count){
+                this.numNotifiche_commenti_at = notifica.notifica_count;
+              }
+            }
+            case "commenti_os": {
+              if(notifica.notifica_count){
+                this.numNotifiche_commenti_os = notifica.notifica_count;
+              }
+            }
+          }
+        }
+        console.log('ADESSO POSSO RENDERIZZARE LA LISTA');
+        this.viewMenu = true;
+      });
+    });
   }
 
   openPage(page) {
@@ -107,6 +167,47 @@ export class MyApp {
     this.nav.setRoot(LoginPage);
   };
 
+  public getNumeroNotifiche(titolo: string): string {
+    var toReturn = '';
+    switch(titolo){
+      case "Attività": 
+        if(this.numNotifiche_attivita > 0){
+          toReturn = '('+this.numNotifiche_attivita+')';
+        }
+        break;
+      case "Osservazioni": 
+        if(this.numNotifiche_osservazioni > 0){
+          toReturn = '('+this.numNotifiche_osservazioni+')';
+        }
+        break;
+      case "Prescrizioni": 
+        if(this.numNotifiche_prescrizioni > 0){
+          toReturn = '('+this.numNotifiche_prescrizioni+')';
+        }
+        break;
+      case "Messaggi": 
+        if(this.numNotifiche_messaggi > 0){
+          toReturn = '('+this.numNotifiche_messaggi+')';
+        }
+        break;
+      case "Commenti Attivita": 
+        if(this.numNotifiche_commenti_at > 0){
+          toReturn = '('+this.numNotifiche_commenti_at+')';
+        }
+        break;
+      case "Commenti Osservazioni": 
+        if(this.numNotifiche_commenti_os > 0){
+          toReturn = '('+this.numNotifiche_commenti_os+')';
+        }
+        break;
+      default: 
+        toReturn = '';
+        break;
+    }
+
+    console.log('notifiche per ' + titolo + ': ' + toReturn);
+    return toReturn;
+  }
 
   /*
   @Component({
