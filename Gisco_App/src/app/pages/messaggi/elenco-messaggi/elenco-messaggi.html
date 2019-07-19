@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Messaggi</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  
+  <ion-list>
+    <ion-searchbar (ionInput)="setMessaggiFiltro($event)"></ion-searchbar>
+    <div class="card no-border card-large messaggi">
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <ion-item *ngFor="let mess of listaMessaggi" class="comm">
+            <li class="list-group-item ">
+              <div class=" item ">
+                <ion-icon name="eye" [ngStyle]="{'color' : color }" (click)="goToDetails(mess)"></ion-icon>
+                <ion-icon name="checkbox" [ngStyle]="{'color' : color }"></ion-icon>
+                <ion-icon name="star-outline" [ngStyle]="{'color' : color }" *ngIf="mess.preferito==''" (click)="setStar(mess,'S')"></ion-icon>
+                <ion-icon name="star-outline" [ngStyle]="{'color' : color }" *ngIf="mess.preferito=='N'" (click)="setStar(mess,'S')"></ion-icon>
+                <ion-icon name="star" [ngStyle]="{'color' : color }" *ngIf="mess.preferito=='S'" (click)="setStar(mess,'N')"></ion-icon>
+                <ion-icon name="trash" [ngStyle]="{'color' : color }" (click)="deleteConfirm(mess)"></ion-icon>
+                <!--<div  class="user-small contact-small">
+                  <img  src="{{mess.url_avatar}}">
+                </div>-->
+              </div>
+              <div class="brief" (click)="goToDetails(mess)">
+                <h5 class="name ">{{mess.cognome_mit}} {{mess.nome_mit}}</h5>
+                <p [ngStyle]="{'color' : color }" class="text ">{{mess.soggetto}}</p>
+                <p [ngStyle]="{'color' : color }">{{mess.data}}</p>
+                <i [ngStyle]="{'color' : color }" class="fa fa-mobile device"></i>
+              </div>
+            </li>
+          </ion-item>
+        </ul>
+      </div>
+    </div>
+  </ion-list>
+
+  <ion-infinite-scroll (ionInfinite)="loadMore($event)" loadingSpinner="bubbles" loadingText="Caricamento Messaggi...">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+</ion-content>
+<ion-footer>
+  <div [ngStyle]="{'background-color' : color }" class=" small text-white">
+    <ion-grid class="messaggi-action">
+      <ion-row>
+        <ion-col>
+          <div (click)="goToNuovoMessaggio()"> Nuovo </div>
+        </ion-col>
+        <ion-col>
+          <div (click)="goToUscitaMessaggi()"> Uscita </div>
+        </ion-col>
+        <ion-col>
+          <div (click)="goToImportantiMessaggi()"> Importanti </div>
+        </ion-col>
+        <ion-col>
+          <div (click)="goToCestinoMessaggio()"> Cestino </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-footer>

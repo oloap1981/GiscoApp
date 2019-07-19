@@ -1,0 +1,48 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>Attività</ion-title>
+    </ion-navbar>
+</ion-header>
+<ion-content padding>
+    <ion-card class="rounded-generic-card">
+        <ion-card-header class="generic-card-header blue-header">ELENCO Attività</ion-card-header>
+        <ion-card-content class="yellow-header">
+            <ion-searchbar placeholder="Sito" (ionInput)="setSitoFiltro($event)"></ion-searchbar>
+            <ion-searchbar placeholder="Protocollo" (ionInput)="setProtocolloFiltro($event)"></ion-searchbar>
+            <ion-item>
+                <ion-label>Categoria</ion-label>
+                <ion-select [(ngModel)]="categoriaSelezionata" (ionChange)="setCategoriaFiltro()">
+                    <ion-option *ngFor="let categoria of listaCategorie" [value]="categoria">
+                        {{categoria.tab_tipo_attivita_desc}}</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label>Tipologia</ion-label>
+                <ion-select [(ngModel)]="tipologiaSelezionata" (ionChange)="setTipologiaFiltro()">
+                    <ion-option *ngFor="let tipologia of listaTipologie" [value]="tipologia">
+                        {{tipologia.tab_tipo_scadenza_desc}}</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-list>
+                <ion-item *ngFor="let attivita of listaAttivita" (click)="goToDetails(attivita)">
+                    <ion-label>Sito {{attivita.az_codice_interno}} {{attivita.az_ragione_sociale}}</ion-label>
+                    <ion-label>{{attivita.att_titolo}}</ion-label>
+                    <ion-label>Tipologia {{attivita.tab_tipo_scadenza_desc}}</ion-label>
+                    <ion-label>Data scadenza {{attivita.att_data_scadenza}}</ion-label>
+                    <ion-label>Stato {{(attivita.att_conclusa==='S'?"conclusa":"non conclusa")}}</ion-label>
+                    <ion-label>dispositivo {{attivita.att_dispositivo_key}}</ion-label>
+                    <ion-label> {{attivita.att_protocollo}}</ion-label>
+                </ion-item>
+            </ion-list>
+        </ion-card-content>
+    </ion-card>
+
+    <ion-infinite-scroll (ionInfinite)="loadMore($event)" loadingSpinner="bubbles"
+        loadingText="Caricamento Attività...">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+</ion-content>

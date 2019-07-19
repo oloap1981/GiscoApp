@@ -1,0 +1,125 @@
+<!--
+  Generated template for the DashboardProcedimentoPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar hideBackButton>
+    <ion-buttons left>
+      <button (click)="back()" ion-button icon-left clear>
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
+      <div class="icon-section">
+        <i [ngClass]="icon" [ngStyle]="{'color' : color }"></i>
+      </div>
+    </ion-buttons>
+    <ion-title>Procedimento</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <div padding>
+    <ion-segment [(ngModel)]="whichPage">
+      <ion-segment-button value="Procedimento" checked (ionSelect)="segmentProcedimentoClicked($event)">
+        <ion-label>Procedimento</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="Personalizzazioni" (ionSelect)="segmentPersonalizzazioniClicked($event)">
+        <ion-label>Personalizzazioni</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="Fasi" (ionSelect)="segmentFasiClicked($event)">
+        <ion-label>Fasi</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <div [ngSwitch]="whichPage">
+    <ion-list *ngSwitchCase="'Procedimento'">
+      <ion-item>
+        <h3 text-center *ngIf="selectedProcedimento">
+          <p>Codice Sito {{selectedProcedimento.az_codice_interno}}</p>
+          <p> Sito {{selectedProcedimento.az_ragione_sociale}}</p>
+          <p> Titolo procedimento {{selectedProcedimento.pro_titolo}}</p>
+          <p>Data avvio {{selectedProcedimento.pro_data_avvio}}</p>
+          <p>Tipologia {{selectedProcedimento.tab_tipo_procedimento_desc}}</p>
+          <p>Date Esecuzione (se presenti) {{selectedProcedimento.pro_da_data_esecuzione}}
+            {{selectedProcedimento.pro_a_data_esecuzione}}</p>
+          <p>Descrizione {{selectedProcedimento.pro_descrizione}}</p>
+          <p>Stato {{selectedProcedimento.pro_chiuso}} {{selectedProcedimento.pro_chiuso_autocertificazione}}</p>
+          <p>Note {{selectedProcedimento.pro_note}}</p>
+          <p>Cause apertura (se presenti) {{selectedProcedimento.tab_cause_apertura_sito_desc}}</p>
+          <p>Causa notifica (se presente) {{selectedProcedimento.tab_cause_notifica_desc}}</p>
+          <p>Ente controllo (se presente) {{selectedProcedimento.ente_controllo}}</p>
+          <p *ngIf="selectedProcedimento.stato_prescrizioni ">Icone pr_ottemperate
+            {{selectedProcedimento.stato_prescrizioni.pr_ottemperate}}</p>
+          <p *ngIf="selectedProcedimento.stato_prescrizioni">Icone pr_vincolate
+            {{selectedProcedimento.stato_prescrizioni.pr_vincolate}}</p>
+          <p *ngIf="selectedProcedimento.stato_prescrizioni">Icone pr_senza_data
+            {{selectedProcedimento.stato_prescrizioni.pr_senza_data}}</p>
+          <p *ngIf="selectedProcedimento.stato_prescrizioni">Icone pr_scadute
+            {{selectedProcedimento.stato_prescrizioni.pr_scadute}}</p>
+          <p *ngIf="selectedProcedimento.stato_prescrizioni">Icone pr_in_scadenza
+            {{selectedProcedimento.stato_prescrizioni.pr_in_scadenza}}</p>
+          <p *ngIf="selectedProcedimento.stato_prescrizioni">Icone pr_prossime
+            {{selectedProcedimento.stato_prescrizioni.pr_prossime}}</p>
+          <p>elenco campi personalizzati {{selectedProcedimento.az_note}}</p>
+        </h3>
+        <button ion-button *ngIf="selectedProcedimento.stato_prescrizioni" (click)="goToComunicazioni()">Comunicazioni
+          {{selectedProcedimento.stato_prescrizioni.comunicazioni}}</button>
+      </ion-item>
+    </ion-list>
+    <ion-list *ngSwitchCase="'Fasi'">
+      <ion-label>Titolo {{selectedProcedimento.pro_titolo}}</ion-label>
+      <ion-label>Sito {{selectedProcedimento.az_ragione_sociale}}</ion-label>
+      <ion-item *ngFor="let f of fasi; let i=index">
+        <ion-row>
+          <span ion-text>
+            descrizione {{f.tab_fase_procedimento_desc}}
+            percentuale avanzamento {{f.perc_avanzamento}}
+            <ion-icon padding-left *ngIf="f.step_avanzamento.length>0"
+              [name]="selectedFase == i ? 'arrow-down' : 'arrow-forward'" float-right
+              (click)="espendiFase($event, f, i)"></ion-icon>
+          </span>
+          <ion-list [hidden]="selectedFase != i">
+            <ion-item no-border *ngFor="let s_a of f.step_avanzamento">
+              <ion-row>
+                {{s_a.tab_fase_procedimento_step.tab_fase_procedimento_step_desc}}
+                {{s_a.ps_fine}}
+                {{s_a.tab_fase_procedimento_step.tab_fase_procedimento_step_peso}}
+              </ion-row>
+            </ion-item>
+          </ion-list>
+        </ion-row>
+      </ion-item>
+    </ion-list>
+    <ion-list *ngSwitchCase="'Personalizzazioni'">
+
+      <ion-item-group *ngFor="let p of personalizzazioni">
+        <ion-item *ngIf="p.tp_tipo_campo==='T'|| p.tp_tipo_campo==='S'">
+          <ion-label> {{p.tp_scheda_testo}} {{p.tp_valore_t}}</ion-label>
+        </ion-item>
+        <ion-item *ngIf="p.tp_tipo_campo==='D'">
+          <ion-label> {{p.tp_scheda_testo}} {{p.tp_valore_d}}</ion-label>
+        </ion-item>
+        <ion-item *ngIf="p.tp_tipo_campo==='N'">
+          <ion-label> {{p.tp_scheda_testo}} {{p.tp_valore_n}}</ion-label>
+        </ion-item>
+        <ion-item-group *ngIf="p.tp_tipo_campo==='M'">
+          <ion-label> {{p.tp_scheda_testo}}</ion-label>
+          <ion-list>
+            <ion-item *ngFor="let v of p.tp_valori">
+              <ion-label>{{v.tp_testo}} {{v.tp_valore}}</ion-label>
+              <ion-checkbox  slot="end" disabled="true" [checked]="v.tp_valore_scelto!=='N'"></ion-checkbox>
+            </ion-item>
+          </ion-list>
+        </ion-item-group>
+      </ion-item-group>
+    </ion-list>
+
+
+  </div>
+
+</ion-content>

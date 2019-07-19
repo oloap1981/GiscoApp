@@ -1,0 +1,46 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>Procedimenti</ion-title>
+    </ion-navbar>
+</ion-header>
+<ion-content padding>
+    <ion-card class="rounded-generic-card">
+        <ion-card-header class="generic-card-header blue-header">ELENCO Procedimenti</ion-card-header>
+        <ion-card-content class="yellow-header">
+            <ion-searchbar placeholder="Sito" (ionInput)="setSitoFiltro($event)"></ion-searchbar>
+            <ion-searchbar placeholder="Titolo" (ionInput)="setTitoloFiltro($event)"></ion-searchbar>
+            <ion-item>
+                <ion-label>Tipologia</ion-label>
+                <ion-select [(ngModel)]="tipologiaSelezionata" (ionChange)="setTipologiaFiltro()">
+                    <ion-option *ngFor="let tipologia of listaTipologie" [value]="tipologia">
+                        {{tipologia.tab_tipo_procedimento_desc}}</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-list>
+                <ion-item *ngFor="let procedimento of listaProcedimenti" (click)="goToDetails($event, procedimento)">
+                    <ion-label>Codice Sito {{procedimento.az_codice_interno}}</ion-label>
+                    <ion-label>Sito {{procedimento.az_ragione_sociale}}</ion-label>
+                    <ion-label>Titolo procedimento {{procedimento.pro_titolo}}</ion-label>
+                    <ion-label>Data {{procedimento.pro_data_avvio}}</ion-label>
+                    <ion-label>Tipologia {{procedimento.tab_tipo_procedimento_desc}}</ion-label>
+                    <ion-label *ngIf="procedimento.pr_ottemperate>0">{{procedimento.pr_ottemperate}}</ion-label>
+                    <ion-label *ngIf="procedimento.pr_vincolate>0">{{procedimento.pr_vincolate}}</ion-label>
+                    <ion-label *ngIf="procedimento.pr_senza_data>0">{{procedimento.pr_senza_data}}</ion-label>
+                    <ion-label *ngIf="procedimento.pr_scadute>0">{{procedimento.pr_scadute}}</ion-label>
+                    <ion-label *ngIf="procedimento.pr_in_scadenza>0">{{procedimento.pr_in_scadenza}}</ion-label>
+                    <ion-label *ngIf="procedimento.pr_prossime>0">{{procedimento.pr_prossime}}</ion-label>
+                    <ion-label *ngIf="procedimento.comunicazioni>0">comunicazioni {{procedimento.comunicazioni}}</ion-label>
+                    <ion-label>stato {{procedimento.pro_chiuso}}</ion-label>
+                </ion-item>
+            </ion-list>
+        </ion-card-content>
+    </ion-card>
+
+    <ion-infinite-scroll (ionInfinite)="loadMore($event)" loadingSpinner="bubbles" loadingText="Caricamento Procedimenti...">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+
+</ion-content>

@@ -1,0 +1,21 @@
+<ion-header>
+	<ion-navbar>
+		<button ion-button menuToggle>
+			<ion-icon name="menu"></ion-icon>
+		</button>
+		<ion-title>Home</ion-title>
+	</ion-navbar>
+</ion-header>
+<button ion-button (click)="goToNuovaOsservazione()">Nuova Osservazione</button>
+<ion-content>
+	<ion-card class="">
+		<ion-card-header class="">
+			<ion-card-title>
+				Doughnut Chart
+			</ion-card-title>
+		</ion-card-header>
+		<ion-card-content class="yellow-header">
+			<canvas #doughnutCanvas></canvas>
+		</ion-card-content>
+	</ion-card>
+</ion-content>

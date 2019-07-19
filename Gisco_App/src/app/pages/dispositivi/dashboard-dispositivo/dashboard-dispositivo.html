@@ -1,0 +1,93 @@
+<!--
+  Generated template for the DashboardDispositivoPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<!--
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle *ngIf="!selectedDispositivo">
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>selectedDispositivo</ion-title>
+  </ion-navbar>
+</ion-header>
+
+  -->
+
+<ion-header>
+    <ion-navbar hideBackButton>
+      <ion-buttons left>
+        <button (click)="back()" ion-button icon-left clear>
+          <ion-icon name="arrow-back"></ion-icon>
+        </button>
+      </ion-buttons>
+      <ion-buttons end>
+        <div class="icon-section">
+          <i [ngClass]="icon" [ngStyle]="{'color' : color }"></i>
+        </div>
+      </ion-buttons>
+          <ion-title>Dispositivo</ion-title>
+    </ion-navbar>
+  </ion-header>
+
+
+<ion-content>
+  <div padding>
+    <ion-segment [(ngModel)]="whichPage">
+      <ion-segment-button value="Dispositivo" checked (ionSelect)="segmentDispositivoClicked($event)">
+        Dispositivo
+      </ion-segment-button>
+      <ion-segment-button value="Titolarità" (ionSelect)="segmentTitolaritaClicked($event)">
+        Titolarità
+      </ion-segment-button>
+      <ion-segment-button value="Autorizzazioni" (ionSelect)="segmentAutorizzazioniClicked($event)">
+        Autorizzazioni
+      </ion-segment-button>
+      <ion-segment-button value="Mappa" (ionSelect)="segmentMappaClicked($event)">
+        Mappa
+      </ion-segment-button>
+      <ion-segment-button value="Immagini" (ionSelect)="segmentImmaginiClicked($event)">
+        Immagini
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <div *ngIf="selectedDispositivo" [ngSwitch]="whichPage">
+    <ion-list *ngSwitchCase="'Dispositivo'">
+      <ion-item>
+        <h3>
+          {{selectedDispositivo.dis_titolo}}
+        </h3>
+        <p>
+          Codice {{selectedDispositivo.az_codice_interno}}<br>
+          Sito{{selectedDispositivo.az_ragione_sociale}}<br>
+          Tipologia{{selectedDispositivo.tab_tipo_dispositivo_desc}}<br>
+          Gestore {{selectedDispositivo.dis_gestore_desc}}
+          Data attivazione {{selectedDispositivo.dis_data_attivazione}}<br>
+          Data disattivazione {{selectedDispositivo.dis_data_disattivazione}}<br>
+          Note {{selectedDispositivo.dis_descrizione}}<br>
+        </p>
+      </ion-item>
+    </ion-list>
+    <ion-list *ngSwitchCase="'Titolarità'">
+      <ion-item *ngFor="let t of titolarita">
+        {{t.di_ragione_sociale}}
+        {{t.dp_nominativo}}
+        {{t.dis_da_data}}
+        {{t.dis_a_data}}
+      </ion-item>
+    </ion-list>
+    <ion-list *ngSwitchCase="'Autorizzazioni'">
+        <ion-item *ngFor="let autorizzazione of autorizzazioni">
+        </ion-item>
+      </ion-list>
+      <ion-list *ngSwitchCase="'Mappa'">
+        <ion-item>
+            <map-component [mapModel]="mapModel" *ngIf="showMap" (onMarkerClicked)="markerClicked($event)" ></map-component>
+        </ion-item>
+      </ion-list>
+  </div>
+
+</ion-content>

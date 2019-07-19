@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-navbar hideBackButton>
+    <ion-buttons left>
+      <button (click)="back()" ion-button icon-left clear>
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
+      <div class="icon-section">
+        <i [ngClass]="icon" [ngStyle]="{'color' : color }"></i>
+      </div>
+    </ion-buttons>
+    <ion-title>Messaggi Cestino</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-searchbar (ionInput)="setMessaggiFiltro($event)"></ion-searchbar>
+    <div class="card no-border card-large messaggi">
+      <div [ngStyle]="{'background-color' : color }" class="card-header  small text-white">Cestino</div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <ion-item *ngFor="let mess of listaMessaggi" class="comm">
+            <li class="list-group-item ">
+              <div class=" item ">
+                <ion-icon name="eye" (click)="goToDetails(mess)"></ion-icon>
+                <ion-icon name="close" (click)="deleteConfirm(mess)"></ion-icon>
+                <ion-icon name="cloud-upload" (click)="ripristina(mess)"></ion-icon>
+              </div>
+              <div class="brief" (click)="goToDetails(mess)">
+                <h5 class="name ">{{mess.cognome_mit}} {{mess.nome_mit}}</h5>
+                <p [ngStyle]="{'color' : color }" class="text ">{{mess.soggetto}}</p>
+                <p [ngStyle]="{'color' : color }">{{mess.data}}</p>
+                <i [ngStyle]="{'color' : color }" class="fa fa-mobile device"></i>
+              </div>
+            </li>
+          </ion-item>
+        </ul>
+      </div>
+    </div>
+  </ion-list>
+
+  <ion-infinite-scroll (ionInfinite)="loadMore($event)" loadingSpinner="bubbles" loadingText="Caricamento Messaggi...">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
